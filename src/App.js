@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import React from 'react';
+import Header from './Components/Header/Header';
+import Login from './Components/Login/login';
+import Task from './Components/Task/task';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { connect } from 'react-redux'
+const App = (props) => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+    <>
+      <BrowserRouter>
+      <Header />
 
-export default App;
+      <Routes>
+     
+        {!props.Login_Status&& <Route exact path='/' element={<Login />} /> }
+        {props.Login_Status&& <Route path="/Home" element={<Task />} /> }
+
+        
+      </Routes>
+      </BrowserRouter>
+    </>
+  )
+}
+const mapStateToProps = (state) => ({
+   Login_Status:state.Reducer.LoginStatus 
+   
+})
+
+const mapDispatchToProps=(dispatch)=>({
+
+  
+
+
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
