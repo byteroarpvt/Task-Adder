@@ -35,6 +35,13 @@ const Task = (props) => {
         
 
         },[])
+      const handleCancel=()=>{
+        setValues({...values, Description:"",
+        Date:"",
+        Time:"",
+        AssignedUser:"",})
+        setShowTask(false)
+      }
      const handleSave=()=>{
         fetch(`https://stage.api.sloovi.com/task/lead_cb11a91b1bff4c42806b5c8dea51425d?company_id=${results.company_id}`, {
             method: "POST",
@@ -45,7 +52,15 @@ const Task = (props) => {
                                  "is_completed":0,"time_zone":19800}),
             headers: {'Authorization': 'Bearer ' +results.token,'Accept': 'application/json','Content-Type': 'application/json',} })
            .then(response => response.json()) 
-           .then(json => console.log(json))
+           .then(json => {
+             if(json.status==='success'){
+               alert("Data added successfully ")
+               setValues({...values, Description:"",
+               Date:"",
+               Time:"",
+               AssignedUser:"",})
+             }
+           })
            .catch(err => console.log(err)) 
             setShowTask(false)
      }
@@ -78,20 +93,21 @@ const Task = (props) => {
                   </div>
                     <div>
                    <label htmlFor="inputPassword7" className="form-label">Assigned User </label>
-                  <select className="form-select" aria-label="Default select example" value={values.AssignedUser} onChange={(e)=>setValues({...values,AssignedUser:e.target.value})}>
+                  <select className="form-select" aria-label="Default select example"  onChange={(e)=>setValues({...values,AssignedUser:e.target.value})} >
                      <option  value="nouser">select user</option>
                      {props.userList.results.data.map((e,i)=>(
+
                      <option  value={e.user_id} key={i+234}>{e.first+e.last}</option>
 
                      ))}
                    </select>
                   </div>
                   <div className={Styles.btnContainer}>
-                    <button className="btn d-md-block btn-primary m-2" type="button" onClick={()=>setShowTask(false)} >Cancel</button>
+                    <button className="btn d-md-block btn-primary m-2" type="button" onClick={handleCancel} >Cancel</button>
                     <button className="btn d-md-block btn-primary m-2" type="button" onClick={handleSave}>Save</button>
                  </div>
               </div>}
-              <DisplayTask  TaskLength={TotalTaskLenght} svaebtn={ShowTask}  />
+              {!ShowTask &&  <DisplayTask  TaskLength={TotalTaskLenght} svaebtn={ShowTask}  />}
         </div>
      );
 }

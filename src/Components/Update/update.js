@@ -1,23 +1,28 @@
 import React,{useEffect,useState} from 'react';
 import { connect } from 'react-redux'
 import Styles1 from "../DisplayTask/display.module.css"
-import { TimeToSecConvert } from '../CommonHooks/TimeConverter';
+import { TimeToSecConvert ,convertHMS} from '../CommonHooks/TimeConverter';
 
  const Update=(props)=>{
    const {UserData}=props
    const [itemData, setitemData] = useState([]);
+   const [loader, setLoader] = useState(false);
    const [values, setValues] = useState({
     Description:props.comparedata.task_msg,
     Date:props.comparedata.task_date,
-    Time:"",
-    AssignedUser:"",
+    Time:convertHMS(props.comparedata.task_time),
+    AssignedUser:props.comparedata.assigned_user,
     });
+// console.log(itemData)
   useEffect(()=>{
        fetch(` https://stage.api.sloovi.com/task/lead_cb11a91b1bff4c42806b5c8dea51425d/${props.comparedata.id}?company_id=${UserData.results.company_id}`, {
           method:"GET",
           headers: {'Authorization': 'Bearer ' + UserData.results.token,'Accept': 'application/json','Content-Type': 'application/json',} })
          .then(response => response.json()) 
-         .then(json =>setitemData(json.results) )
+         .then(json =>(
+          setitemData(json.results),
+          setLoader(true))
+           )
          .catch(err => console.log(err)) 
     
   },[])
@@ -64,7 +69,10 @@ import { TimeToSecConvert } from '../CommonHooks/TimeConverter';
   return(
     <>
       <div>
-                        <div className={Styles1.container2} >
+        {!loader&&
+        <div>Loading</div>
+        }
+                 { loader &&  <div className={Styles1.container2} >
                     <div>
                       <label htmlFor="inputPassword5" className="form-label">Task description</label>
                       <input type="text" id="inputPassword5"  value={values.Description} onChange={(e)=>setValues({...values,Description:e.target.value})} className="form-control" aria-describedby="passwordHelpBlock" />
@@ -82,11 +90,10 @@ import { TimeToSecConvert } from '../CommonHooks/TimeConverter';
                     </div>
                       <div>
                      <label htmlFor="inputPassword7" className="form-label">Assigned User </label>
-                    <select className="form-select" aria-label="Default select example" value={values.AssignedUser} onChange={(e)=>setValues({...values,AssignedUser:e.target.value})}>
-                       <option  value="nouser">select user</option>
+                    <select className="form-select" aria-label="Default select example"  onChange={(e)=>setValues({...values,AssignedUser:e.target.value})}>
                        {props.userList.results.data.map((e,i)=>(
                        <option  value={e.user_id} key={i+234}>{e.first+e.last}</option>
-  
+                             
                        ))}
                      </select>
                     </div>
@@ -95,8 +102,8 @@ import { TimeToSecConvert } from '../CommonHooks/TimeConverter';
                       <button className="btn d-md-block btn-primary m-2" type="button" onClick={()=>props.btn(false) }  >Cancel</button>
                       <button className="btn d-md-block btn-primary m-2" type="button" onClick={handleUpdate} >Update</button>
                    </div>
-                </div>
-                    </div>
+                </div>}
+           </div>
     </>
   )
   

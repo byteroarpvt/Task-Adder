@@ -6,6 +6,7 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
+
 }
 .container1{
     width: 100%;
@@ -14,8 +15,9 @@
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
     max-width: 500px;
+    /* border: 0.5px solid gray; */
+
 }
 .box1{
     width: 80%;
@@ -26,10 +28,11 @@
     width: 20%;
     border: 0.5px solid gray;
     text-align: center;
-    padding: 10px;
     cursor: pointer;
     font-weight: 900;
     box-sizing: border-box;
+    padding: 10px;
+
 
 }
 .container2{
@@ -39,9 +42,10 @@
     flex-wrap: nowrap;
     justify-content: space-between;
     /* align-items: center; */
-    padding: 10px;
     max-width: 500px;
     background-color: rgb(149, 211, 211);
+    padding: 10px;
+    border: 0.5px solid gray;
 
 }
 
@@ -55,9 +59,8 @@
     padding: 10px 0px; 
 }
 .dateTimeContainer div{
-    width: 50%;
-    padding: 10px; 
-
+    width: 45%;
+   
 }
 
 
